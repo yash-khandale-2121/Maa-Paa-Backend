@@ -17,13 +17,27 @@ connectDB();
 
 // Middleware
 app.use(helmet());
-app.use(xss());    
+app.use(xss());  
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://maapaacaretakers.vercel.app'
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true
   })
 );
+
+app.options('*', cors());
 app.use(express.json({ limit: '10kb' }));
 app.use(morgan('dev'));
 sanitize(app);
