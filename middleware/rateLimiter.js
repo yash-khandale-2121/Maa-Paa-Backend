@@ -1,7 +1,7 @@
 // server/middleware/rateLimiter.js
-import rateLimit from 'express-rate-limit';
+const rateLimit = require('express-rate-limit');
 
-export const contactFormLimiter = rateLimit({
+const contactFormLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 20, // max 20 submissions per IP
   standardHeaders: true,
@@ -10,3 +10,5 @@ export const contactFormLimiter = rateLimit({
     message: 'Too many requests. Please try again after some time.'
   }
 });
+
+module.exports = { contactFormLimiter };
